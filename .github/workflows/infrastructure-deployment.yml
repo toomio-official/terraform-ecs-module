@@ -17,10 +17,10 @@ jobs:
       TF_VAR_acm_arn: ${{ secrets.ACM_ARN }}
     steps:
     - name: Checkout the code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1.7.0
+      uses: aws-actions/configure-aws-credentials@v2
       with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           role-session-name: "GitHub_to_AWS_via_FederatedOIDC"
