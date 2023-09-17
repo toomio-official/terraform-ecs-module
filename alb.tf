@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "toomio_backend_target_group" {
 
   health_check {
     matcher = "200"
-    path    = "/"
+    path    = "/health"
   }
 }
 
