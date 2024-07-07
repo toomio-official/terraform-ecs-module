@@ -1,10 +1,11 @@
 name: Infrastructure Deployment Workflow
- 
+
 on:
   push:
     branches:
       - main
- 
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,32 +16,32 @@ jobs:
     env:
       TF_VAR_backend_app_image: ${{ secrets.BACKEND_APP_IMAGE }}
       TF_VAR_acm_arn: ${{ secrets.ACM_ARN }}
-      
-    steps:
-    - name: Checkout the code
-      uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           role-session-name: "GitHub_to_AWS_via_FederatedOIDC"
           aws-region: "us-east-1"
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.0
-  
-    - name: Terraform init
-      run: terraform init
-  
-    - name: Terraform validate
-      run: terraform validate
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
 
-    - name: Terraform plan
-      run: terraform plan
- 
-    - name: Terraform apply
-      if: github.ref == 'refs/heads/main'
-      run: terraform apply -auto-approve
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        run: terraform plan
+
+      - name: Terraform apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
