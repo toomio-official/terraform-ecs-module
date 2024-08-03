@@ -16,6 +16,15 @@ resource "aws_ecs_task_definition" "backend_task" {
           "hostPort": 3000
         }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/toomio-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
       "memory": 512,
       "cpu": 256
     }
@@ -27,6 +36,15 @@ resource "aws_ecs_task_definition" "backend_task" {
   memory                   = 512
   cpu                      = 256
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+
+  depends_on = [
+    aws_cloudwatch_log_group.backend_log_group
+ ]
+}
+
+resource "aws_cloudwatch_log_group" "backend_log_group" {
+  name = "/ecs/toomio-backend"
+  retention_in_days = 14
 }
 
 resource "aws_ecs_service" "backend_service" {
