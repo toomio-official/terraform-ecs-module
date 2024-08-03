@@ -39,7 +39,7 @@ resource "aws_ecs_task_definition" "backend_task" {
 
   depends_on = [
     aws_cloudwatch_log_group.backend_log_group
- ]
+  ]
 }
 
 resource "aws_cloudwatch_log_group" "backend_log_group" {
